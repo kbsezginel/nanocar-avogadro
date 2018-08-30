@@ -45,20 +45,13 @@ def build_nanocar(opts):
     nanocar = chassis + wheel
     return mol2xyz(nanocar)
 
+
 def mol2xyz(mol):
     """Converts Angstrom Molecule to xyz string"""
     mol_xyz = "%i\n%s\n" % (len(mol.atoms), mol.name)
     for atom, coor in zip(mol.atoms, mol.coordinates):
         mol_xyz += "%s %f %f %f\n" % (atom, coor[0], coor[1], coor[2])
     return mol_xyz
-
-
-def add_molecule(opts):
-    """Read selected molecule."""
-    mol_xyz = os.path.join(mol_dir, '%s.xyz' % opts['mol'])
-    with open(mol_xyz, 'r') as f:
-        newmol = f.readlines()
-    return ''.join(newmol)
 
 
 def run_workflow():
