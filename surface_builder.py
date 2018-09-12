@@ -14,7 +14,7 @@ import ase.build
 
 # Some globals:
 debug = True
-crystals = ['bcc100', 'bcc110', 'bcc111', 'fcc100', 'fcc110', 'fcc111', 'fcc211']
+surface_selections = ['bcc100', 'bcc110', 'bcc111', 'fcc100', 'fcc110', 'fcc111', 'fcc211']
 
 
 def get_options():
@@ -23,22 +23,60 @@ def get_options():
     user_options['surface'] = {'label': 'Surface',
                                'type': 'stringList',
                                'default': 'bcc100',
-                               'values': crystals}
+                               'values': surface_selections}
+
+    user_options['metal'] = {'label': 'Metal',
+                             'type': 'string',
+                             'default': 'Au'}
+
+    user_options['a'] = {'label': 'Lattice Constant',
+                         'type': 'float',
+                         'precision': 3,
+                         'suffix': 'Å'}
+
+    user_options['size-x'] = {'label': 'Size X',
+                              'type': 'integer',
+                              'default': 5}
+
+    user_options['size-y'] = {'label': 'Size Y',
+                              'type': 'integer',
+                              'default': 5}
+
+    user_options['size-z'] = {'label': 'Size Z',
+                              'type': 'integer',
+                              'default': 3}
+
+    user_options['vacuum'] = {'label': 'Vacuum distance',
+                              'type': 'float',
+                              'precision': 1,
+                              'suffix': 'Å'}
+
+    user_options['orthogonal'] = {'label': 'Orthogonal',
+                                  'type': 'stringList',
+                                  'default': 'True',
+                                  'values': ['True', 'False']}
 
     return {'userOptions': user_options }
 
 
+    userOptions['Z Scale']['label'] = 'Z Scale'
+    userOptions['Z Scale']['type'] = 'float'
+    userOptions['Z Scale']['default'] = 1.0
+    userOptions['Z Scale']['precision'] = 3
+    userOptions['Z Scale']['toolTip'] = 'Multiplier for Z coordinates'
+
+
 def build_surface(opts):
     """Builds crystal surface."""
-    surf = dict(crystal=opts['surface'], metal='Au', a=4, size=[10, 10, 5], vacuum=0, orthogonal=True)
-    builder = getattr(ase.build, surf['crystal'])
-    ase_surf = builder(surf['metal'], a=surf['a'], size=surf['size'], vacuum=surf['vacuum'], orthogonal=surf['orthogonal'])
+    builder = getattr(ase.build, opts['surface'])
+    size = [opts['size-x'], opts['size-y'], opts['size-z']]
+    ase_surf = builder(opts['metal'], a=opts['a'], size=size, vacuum=opts['vacuum'], orthogonal=opts['orthogonal'])
     ase_surf.center(about=(0, 0, 0))
     return ase2xyz(ase_surf)
 
 
 def ase2xyz(atoms):
-    """Converts Angstrom Molecule to xyz string"""
+    """Converts ASE Atoms object to xyz string"""
     atoms.write('temp.xyz', append=False)
     xyz = ""
     with open('temp.xyz', 'r') as f:
@@ -63,7 +101,7 @@ def run_workflow():
 
 
 if __name__ == "__main__":
-    parser = argparse.ArgumentParser('Build Surface')
+    parser = argparse.ArgumentParser('Build Metal Surface')
     parser.add_argument('--debug', action='store_true')
     parser.add_argument('--print-options', action='store_true')
     parser.add_argument('--run-workflow', action='store_true')
@@ -75,7 +113,7 @@ if __name__ == "__main__":
     debug = args['debug']
 
     if args['display_name']:
-        print("ASE Surface")
+        print("Metal Surface")
     if args['menu_path']:
         print("&Build")
     if args['print_options']:
