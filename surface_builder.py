@@ -8,7 +8,6 @@ import os
 import sys
 import json
 import argparse
-from angstrom import Molecule
 import ase.build
 
 
@@ -59,13 +58,6 @@ def get_options():
     return {'userOptions': user_options }
 
 
-    userOptions['Z Scale']['label'] = 'Z Scale'
-    userOptions['Z Scale']['type'] = 'float'
-    userOptions['Z Scale']['default'] = 1.0
-    userOptions['Z Scale']['precision'] = 3
-    userOptions['Z Scale']['toolTip'] = 'Multiplier for Z coordinates'
-
-
 def build_surface(opts):
     """Builds crystal surface."""
     builder = getattr(ase.build, opts['surface'])
@@ -86,13 +78,10 @@ def ase2xyz(atoms):
 
 
 def run_workflow():
-    # Read options from stdin
+    """Run surface builder."""
     stdinStr = sys.stdin.read()
-
-    # Parse the JSON strings
     opts = json.loads(stdinStr)
 
-    # Prepare the result
     result = {}
     result['append'] = True
     result['moleculeFormat'] = 'xyz'
