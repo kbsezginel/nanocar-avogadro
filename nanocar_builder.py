@@ -55,13 +55,10 @@ def mol2xyz(mol):
 
 
 def run_workflow():
-    # Read options from stdin
+    """Run main function - add wheel."""
     stdinStr = sys.stdin.read()
-
-    # Parse the JSON strings
     opts = json.loads(stdinStr)
 
-    # Prepare the result
     result = {}
     result['append'] = True
     result['moleculeFormat'] = 'xyz'
@@ -82,9 +79,9 @@ if __name__ == "__main__":
     debug = args['debug']
 
     if args['display_name']:
-        print("Nanocar!")
+        print("Build")
     if args['menu_path']:
-        print("&Build")
+        print("&Build|Nanocar")
     if args['print_options']:
         print(json.dumps(get_options()))
     elif args['run_workflow']:
