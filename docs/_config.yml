@@ -1,0 +1,11 @@
+theme: jekyll-theme-minimal
+title: Nanocar Builder - Avogadro 2 Plug-in
+description: Nanocar Builder for Avogadro 2
+show_downloads: True
+navigation:
+  - title: Home
+    url: /
+  - title: Avogadro Plug-in Tutorial
+    url: plugin-tutorial
+  - title: Nanocar Build Tutorial
+    url: nanocar-tutorial
