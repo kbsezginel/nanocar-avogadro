@@ -1,13 +1,9 @@
 """
 Nanocar Avogadro 2 plug-in - Add Wheel.
-Adds wheel molecule to selected atom.
+Connects wheel molecule to selected atom.
 
 Author: Kutay B. Sezginel
 Date: September 2018
-
-TODO:
-- Bonding information is lost after adding the wheel. Maybe just append the molecule.
-- Append: True might be changing the coordinates of the appended molecule!!!
 """
 import os
 import sys
@@ -30,7 +26,7 @@ def get_options():
     user_options = {}
     user_options['wheel'] = {'label': 'Wheel',
                              'type': 'stringList',
-                             'default': 'C60',
+                             'default': 'C60-wheel',
                              'values': wheel_list}
 
     user_options['append'] = {'label': 'Append',
@@ -38,12 +34,18 @@ def get_options():
                               'default': 'True',
                               'values': ['True', 'False']}
 
+    user_options['d'] = {'label': 'Bond Distance',
+                         'type': 'float',
+                         'precision': 2,
+                         'default': 1.5,
+                         'suffix': 'Å'}
+
     return {'userOptions': user_options }
 
 
-def add_wheel(opts):
+def connect_wheel(opts):
     """
-    Add wheel molecule to selected atom position.
+    Connect wheel molecule to selected atom position.
     The wheel molecule must have a dummy atom (X) to specify connectivity.
     A selected wheel molecule is added to selected atom by aligning the vector of the wheel.
     """
@@ -59,22 +61,23 @@ def add_wheel(opts):
         selected_cidx = int(selected[0] * 3)
         selected_coors = coords[selected_cidx:selected_cidx + 3]
 
-        # Get dummy atom
-        wheel = Molecule(read=os.path.join(wheel_dir, '%s.xyz' % opts['wheel']))
-        dummy_idx, = np.where(wheel.atoms == 'X')[0]  # Maybe check if more than one?
-
         # Find atom connected to the selected atom
         bond_idx = connections.index(selected[0])
         if bond_idx % 2 == 0:
             bond_idx += 1
         else:
             bond_idx -= 1
+        bond_idx = int(connections[bond_idx] * 3)
 
         # Get vector btw selected atom and atom connected to it
         v_chassi = selected_coors - np.array(coords[bond_idx:bond_idx + 3])
 
-        # Align the wheel with that vector
-        v_wheel = wheel.coordinates[0] - wheel.coordinates[dummy_idx]
+        # Get dummy atom for the wheel
+        wheel = Molecule(read=os.path.join(wheel_dir, '%s.xyz' % opts['wheel']))
+        dummy_idx, = np.where(wheel.atoms == 'X')[0]  # Maybe check if more than one?
+
+        # Align the wheel with chassis connection vector
+        v_wheel = wheel.coordinates[1] - wheel.coordinates[dummy_idx]
         wheel.align(v_wheel, v_chassi)
 
         # Translate the wheel to match dummy coor with selected coor
@@ -87,7 +90,6 @@ def add_wheel(opts):
         if not {'True': True, 'False': False}[opts['append']]:
             wheel += chassi
 
-        wheel.center(selected_coors)
         wheel = mol2xyz(wheel)
     else:
         print('Only 1 atom should be selected!')
@@ -112,7 +114,7 @@ def run_workflow():
     result = opts['cjson']
     result['append'] = {'True': True, 'False': False}[opts['append']]
     result['moleculeFormat'] = 'xyz'
-    result['xyz'] = add_wheel(opts)
+    result['xyz'] = connect_wheel(opts)
     return result
 
 
@@ -129,7 +131,7 @@ if __name__ == "__main__":
     debug = args['debug']
 
     if args['display_name']:
-        print("Add Wheel")
+        print("Connect Wheel")
     if args['menu_path']:
         print("&Build|Nanocar")
     if args['print_options']:
