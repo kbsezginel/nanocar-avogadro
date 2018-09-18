@@ -1,8 +1,9 @@
 """
 Nanocar builder Avogadro 2 plug-in.
+Adds chassis molecule.
 
 Author: Kutay B. Sezginel
-Date: August 2018
+Date: September 2018
 """
 import os
 import sys
@@ -14,9 +15,6 @@ from angstrom import Molecule
 # Some globals:
 debug = True
 
-wheel_dir = os.path.join(os.path.abspath(os.path.dirname(__file__)), 'wheel')
-wheel_list = [i.split('.')[0] for i in os.listdir(wheel_dir)]
-
 chassis_dir = os.path.join(os.path.abspath(os.path.dirname(__file__)), 'chassis')
 chassis_list = [i.split('.')[0] for i in os.listdir(chassis_dir)]
 
@@ -24,15 +22,28 @@ chassis_list = [i.split('.')[0] for i in os.listdir(chassis_dir)]
 def get_options():
     """Create user interface options."""
     user_options = {}
-    user_options['wheel'] = {'label': 'Wheel',
-                             'type': 'stringList',
-                             'default': 'C60',
-                             'values': wheel_list}
-
     user_options['chassis'] = {'label': 'Chassis',
                                'type': 'stringList',
                                'default': 'benzene',
                                'values': chassis_list}
+
+    user_options['center-x'] = {'label': 'X',
+                              'type': 'float',
+                              'default': 0.0,
+                              'precision': 3,
+                              'suffix': 'Å'}
+
+    user_options['center-y'] = {'label': 'Y',
+                              'type': 'float',
+                              'default': 0.0,
+                              'precision': 3,
+                              'suffix': 'Å'}
+
+    user_options['center-z'] = {'label': 'Z',
+                              'type': 'float',
+                              'default': 0.0,
+                              'precision': 3,
+                              'suffix': 'Å'}
 
     return {'userOptions': user_options }
 
@@ -40,10 +51,8 @@ def get_options():
 def build_nanocar(opts):
     """Builds Nanocar molecule."""
     chassis = Molecule(read=os.path.join(chassis_dir, '%s.xyz' % opts['chassis']))
-    wheel = Molecule(read=os.path.join(wheel_dir, '%s.xyz' % opts['wheel']))
-    wheel.translate([5, 0, 0])
-    nanocar = chassis + wheel
-    return mol2xyz(nanocar)
+    chassis.center([opts['center-x'], opts['center-y'], opts['center-z']])
+    return mol2xyz(chassis)
 
 
 def mol2xyz(mol):
@@ -79,7 +88,7 @@ if __name__ == "__main__":
     debug = args['debug']
 
     if args['display_name']:
-        print("Build")
+        print("Add Chassis")
     if args['menu_path']:
         print("&Build|Nanocar")
     if args['print_options']:
