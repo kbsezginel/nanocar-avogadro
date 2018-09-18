@@ -4,7 +4,7 @@
 ## Connecting a Wheel
 
 The wheel molecule is defined by a connection site (shown in pink) and an alignment site (shown in yellow). These sites are used to connect  wheel molecule to any atom / molecule.
-<p align="center"><img src='assets/img/c60-wheel-addition.png' width=300></p>
+<p align="center"><img src='assets/img/c60-wheel-addition.png'></p>
 
 ### Procedure
 
@@ -23,20 +23,20 @@ The wheel molecule is defined by a connection site (shown in pink) and an alignm
 
 #### 1. Draw / build chassis
 Draw or build a molecule to connect the wheel. You need to have at least two connected atoms for the wheel addition to work.
-<p align="center"><img src='assets/img/wheel-addition-step1.png' width=300></p>
+<p align="center"><img src='assets/img/wheel-addition-step1.png'></p>
 
 #### 2. Select connection
 Go to `Build > Nanocar > Add Wheel`. From the window select `C60-wheel` and `Append: True`.
 The append option is used to select between adding the wheel separately or adding the whole nanocar (wheel + chassis). If `Append: False` is used then molecular bonding is recalculated which would bond the wheel to the chassis correctly but it might delete any *unphysical* bonds. If `Append: True` is selected the chassis is left as is and only the wheel is added. This way the user needs to draw the bond between the wheel and the chassis.
-<p align="center"><img src='assets/img/wheel-addition-step2.png' width=300></p>
+<p align="center"><img src='assets/img/wheel-addition-step2.png'></p>
 
 #### 3. Add wheel
 The wheel is added separately as discussed above. Now the wheel can be moved to desired location before connecting to the chassis.
-<p align="center"><img src='assets/img/wheel-addition-step3.png' width=300></p>
+<p align="center"><img src='assets/img/wheel-addition-step3.png'></p>
 
 #### 4. Connect wheel to chassis
 Deselect all atoms (`ctrl + shift + a`) and click on the `Draw` tool. Click one of the atoms you want to connect and drag the mouse to the other atom. And your wheel is ready to roll!
-<p align="center"><img src='assets/img/wheel-addition-step4.png' width=300></p>
+<p align="center"><img src='assets/img/wheel-addition-step4.png'></p>
 
 #### Comments
 

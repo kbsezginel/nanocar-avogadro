@@ -33,3 +33,6 @@ This file includes coordinates for each atom, atom numbers, which atoms are selc
 - Box select
 - Warning dialog box?
 - Cell information (input and output)
+- Display per atom information? Which atom is selected, index, element name etc.
+- Differentiate selected atoms? If multiple atoms are selected is there a way to differentiate between them without looking at the structure.
+- Pass Bonding information?
