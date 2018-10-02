@@ -30,9 +30,8 @@ def get_options():
                              'values': wheel_list}
 
     user_options['append'] = {'label': 'Append',
-                              'type': 'stringList',
-                              'default': 'True',
-                              'values': ['True', 'False']}
+                              'type': 'boolean',
+                              'default': True}
 
     user_options['d'] = {'label': 'Bond Distance',
                          'type': 'float',
@@ -87,7 +86,7 @@ def connect_wheel(opts):
         # Remove dummy atom
         wheel.coordinates = np.delete(wheel.coordinates, [dummy_idx], axis=0)
         wheel.atoms = np.delete(wheel.atoms, [dummy_idx])
-        if not {'True': True, 'False': False}[opts['append']]:
+        if not opts['append']:
             wheel += chassi
 
         wheel = mol2xyz(wheel)
@@ -112,7 +111,7 @@ def run_workflow():
     opts = json.loads(stdinStr)
 
     result = opts['cjson']
-    result['append'] = {'True': True, 'False': False}[opts['append']]
+    result['append'] = opts['append']
     result['moleculeFormat'] = 'xyz'
     result['xyz'] = connect_wheel(opts)
     return result
