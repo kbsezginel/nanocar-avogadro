@@ -45,8 +45,8 @@ def get_options():
 def connect_wheel(opts):
     """
     Connect wheel molecule to selected atom position.
-    The wheel molecule must have a dummy atom (X) to specify connectivity.
-    A selected wheel molecule is added to selected atom by aligning the vector of the wheel.
+    The wheel molecule must have a connection site (Xc) and alignmen site (Xa) to specify connectivity.
+    The selected wheel molecule is added to selected atom by aligning the vector of the wheel.
     """
     selected = [idx for idx, atm in enumerate(opts['cjson']['atoms']['selected']) if atm]
     if len(selected) == 1:
@@ -56,7 +56,7 @@ def connect_wheel(opts):
         atoms = [periodictable.elements[i].symbol for i in opts['cjson']['atoms']['elements']['number']]
         chassi = Molecule(atoms=atoms, coordinates=np.array(coords).reshape((int(len(coords) / 3)), 3))
 
-        # Get wheel coordinate
+        # Get connection site for the chassis
         selected_cidx = int(selected[0] * 3)
         selected_coors = coords[selected_cidx:selected_cidx + 3]
 
@@ -71,21 +71,26 @@ def connect_wheel(opts):
         # Get vector btw selected atom and atom connected to it
         v_chassi = selected_coors - np.array(coords[bond_idx:bond_idx + 3])
 
-        # Get dummy atom for the wheel
-        wheel = Molecule(read=os.path.join(wheel_dir, '%s.xyz' % opts['wheel']))
-        dummy_idx, = np.where(wheel.atoms == 'X')[0]  # Maybe check if more than one?
+        # Read wheel molecule information
+        wheel = read_wheel(opts['wheel'])
 
         # Align the wheel with chassis connection vector
-        v_wheel = wheel.coordinates[1] - wheel.coordinates[dummy_idx]
+        v_wheel = wheel.coordinates[wheel.alignment_site] - wheel.coordinates[wheel.connection_site]
         wheel.align(v_wheel, v_chassi)
 
         # Translate the wheel to match dummy coor with selected coor
-        v_trans = selected_coors - wheel.coordinates[dummy_idx]
+        v_trans = selected_coors - wheel.coordinates[wheel.connection_site]
         wheel.translate(v_trans)
 
-        # Remove dummy atom
-        wheel.coordinates = np.delete(wheel.coordinates, [dummy_idx], axis=0)
-        wheel.atoms = np.delete(wheel.atoms, [dummy_idx])
+        # Adjust bond distance
+        v_bond = wheel.coordinates[wheel.connection_site] - wheel.coordinates[wheel.alignment_site]
+        d_bond = np.linalg.norm(v_bond)
+        v_bond = v_bond - v_bond / d_bond * opts['d']
+        wheel.translate(v_bond)
+
+        # Remove dummy atoms for alignment and connection sites
+        wheel.coordinates = np.delete(wheel.coordinates, [wheel.connection_site, wheel.alignment_site], axis=0)
+        wheel.atoms = np.delete(wheel.atoms, [wheel.connection_site, wheel.alignment_site])
         if not opts['append']:
             wheel += chassi
 
@@ -103,6 +108,14 @@ def mol2xyz(mol):
     for atom, coor in zip(mol.atoms, mol.coordinates):
         mol_xyz += "%s %f %f %f\n" % (atom, coor[0], coor[1], coor[2])
     return mol_xyz
+
+
+def read_wheel(wheel_name):
+    """Read yaml file to Molecule object"""
+    wheel = Molecule(read=os.path.join(wheel_dir, '%s.xyz' % wheel_name))
+    wheel.connection_site, = np.where(wheel.atoms == 'Xc')[0]
+    wheel.alignment_site, = np.where(wheel.atoms == 'Xa')[0]
+    return wheel
 
 
 def run_workflow():
