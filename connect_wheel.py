@@ -26,7 +26,7 @@ def get_options():
     user_options = {}
     user_options['wheel'] = {'label': 'Wheel',
                              'type': 'stringList',
-                             'default': 'C60-wheel',
+                             'default': 'C60',
                              'values': wheel_list}
 
     user_options['append'] = {'label': 'Append',
