@@ -5,7 +5,9 @@ show_downloads: True
 navigation:
   - title: Home
     url: /
+  - title: Installation
+    url: installation
+  - title: Usage
+    url: usage
   - title: Avogadro Plug-in Tutorial
     url: plugin-tutorial
-  - title: Nanocar Build Tutorial
-    url: nanocar-tutorial
