@@ -18,6 +18,9 @@ scripts = ['add_chassis.py', 'connect_wheel.py', 'surface_builder.py']
 folders = ['wheel', 'chassis']
 nanocar_dir = os.path.abspath(os.path.dirname(__file__))
 workflows_dir = os.path.join(AVOGADRO_PLUGIN_DIR, 'workflows')
+if not os.path.exists(workflows_dir):
+    print('Workflows directory does not exist, creating...')
+    os.makedirs(workflows_dir)
 
 
 def copy_files(file_list, src_dir, dest_dir):
