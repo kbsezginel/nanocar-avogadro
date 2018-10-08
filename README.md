@@ -1,7 +1,7 @@
 ## Avogadro Nanocar Builder Plug-in
 Build a Nanocar molecule by picking molecular wheels and chassis in [Avogadro 2](https://www.openchemistry.org/projects/avogadro2/)!
 
-<img src='https://raw.githubusercontent.com/kbsezginel/nanocar-avogadro/master/assets/img/nanocar-plugin.png'>
+<img src='https://raw.githubusercontent.com/kbsezginel/nanocar-avogadro/master/docs/assets/img/nanocar-plugin.png'>
 
 ## Avogadro Plug-in
 
