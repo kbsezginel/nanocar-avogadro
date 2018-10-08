@@ -1,35 +1,13 @@
 ## Avogadro Nanocar Builder Plug-in
-Build a Nanocar molecule by picking molecular wheels and chassis in [Avogadro](https://www.openchemistry.org/projects/avogadro2/)! Just select which wheels and chassis you want and your nanocar will be ready.
+Build a Nanocar molecule by picking molecular wheels and chassis in [Avogadro 2](https://www.openchemistry.org/projects/avogadro2/)!
 
-### Select your parts
-
-<img src='https://raw.githubusercontent.com/kbsezginel/kbsezginel.github.io/master/assets/img/presentations/avogadro/nanocar-bodyparts.png'>
-
-
-
-### Assemble
-<img src='https://raw.githubusercontent.com/kbsezginel/kbsezginel.github.io/master/assets/img/presentations/avogadro/nanocar-assembly.png'>
+<img src='https://raw.githubusercontent.com/kbsezginel/nanocar-avogadro/master/assets/img/nanocar-plugin.png'>
 
 ## Avogadro Plug-in
 
-<img src='https://raw.githubusercontent.com/kbsezginel/chem-tools-tutorials/master/assets/img/Avogadro2_Full_Large.png'>
+<p align="center"><img src='https://raw.githubusercontent.com/kbsezginel/chem-tools-tutorials/master/assets/img/Avogadro2_Full_Large.png' width="600"></p>
 
-### Installation
-[First install Avogadro.](https://www.openchemistry.org/downloads/)
+## [Installation](https://kbsezginel.github.io/nanocar-avogadro/installation)
 
-Then download this repository and copy the contents into your Avogadro 2 plug-ins directory.
-
-#### Python dependencies
-Nanocar builder uses Ångström Python package to assemble molecules.
-
-[**Ångström**](https://github.com/kbsezginel/angstrom)
-```
-git clone https://github.com/kbsezginel/angstrom.git
-cd angstrom
-python setup.py install
-```
-
-### Usage
-If the installation went smoothly you should see a Nanocar entry under Build menu.
-Clicking the Nanocar entry would prompt you to select a wheel and a chassis molecule.
-After the selection the Nanocar will be built!
+## [Usage](https://kbsezginel.github.io/nanocar-avogadro/usage)
+If the installation went smoothly you should see a Nanocar entry under Build menu in Avogadro. To start building a nanocar, see the tutorial [here.](https://kbsezginel.github.io/nanocar-avogadro/usage)
