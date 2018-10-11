@@ -10,4 +10,5 @@ Build a Nanocar molecule by picking molecular wheels and chassis in [Avogadro 2]
 ## [Installation](https://kbsezginel.github.io/nanocar-avogadro/installation)
 
 ## [Usage](https://kbsezginel.github.io/nanocar-avogadro/usage)
-If the installation went smoothly you should see a Nanocar entry under Build menu in Avogadro. To start building a nanocar, see the tutorial [here.](https://kbsezginel.github.io/nanocar-avogadro/usage)
+
+<iframe width="560" height="315" src="https://www.youtube.com/embed/bNmIEJaXltg" frameborder="0" allow="autoplay; encrypted-media" allowfullscreen></iframe>
