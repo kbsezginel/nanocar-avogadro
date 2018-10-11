@@ -1,6 +1,6 @@
 # Building Nanocar
 
-<iframe width="560" height="315" src="https://www.youtube.com/embed/bNmIEJaXltg" frameborder="0" allow="autoplay; encrypted-media" allowfullscreen></iframe>
+<iframe width="600" height="340" src="https://www.youtube.com/embed/bNmIEJaXltg" frameborder="0" allow="autoplay; encrypted-media" allowfullscreen></iframe>
 
 ## Connecting a Wheel
 

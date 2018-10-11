@@ -11,4 +11,4 @@ Build a Nanocar molecule by picking molecular wheels and chassis in [Avogadro 2]
 
 ## [Usage](https://kbsezginel.github.io/nanocar-avogadro/usage)
 
-[![Nanocar Builder Tutorial](https://raw.githubusercontent.com/kbsezginel/chem-tools-tutorials/master/assets/img/nanocar-builder-tutorial-thumbnail.png)](https://www.youtube.com/watch?v=bNmIEJaXltg)
+[![Nanocar Builder Tutorial](https://raw.githubusercontent.com/kbsezginel/nanocar-avogadro/master/docs/assets/img/nanocar-builder-tutorial-thumbnail.png)](https://www.youtube.com/watch?v=bNmIEJaXltg)
