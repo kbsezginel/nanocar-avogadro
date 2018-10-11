@@ -61,7 +61,7 @@ Now you should see the `Nanocar` option under `Build` in Avogadro.
 ## Configuring the Python environment
 1. Install conda [here](https://conda.io/docs/user-guide/install/index.html#regular-installation).
 
-2. Create a new environment in conda.
+2. Create a new environment in conda. In Windows you can use the Anaconda prompt application.
 ```
 conda create -n nanocar python=3.5
 ```
@@ -90,4 +90,12 @@ conda install -c conda_forge ase
 ```
 which python
 ```
-This should return a path like `/home/<username>/anaconda3/envs/nanocar/bin/python`. Copy the path for your environment. In Avogadro2, access the Python Path variable under `Quantum -> Input Generators -> Set Python Path` and paste it here.
+or in Windows:
+```
+where python
+```
+Copy the path for your environment. In Avogadro2, access the Python Path variable under `Quantum -> Input Generators -> Set Python Path` and paste it here.
+
+Example paths:
+- Linux: `/home/<username>/anaconda3/envs/nanocar/bin/python`
+- Windows: `C:\Users\<username>\AppData\Local\conda\conda\envs\nanocar\python.exe`
