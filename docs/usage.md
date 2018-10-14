@@ -1,6 +1,7 @@
 # Nanocar Builder Tutorial
 
-<iframe width="800" height="450" src="https://www.youtube.com/embed/bNmIEJaXltg" frameborder="0" allow="autoplay; encrypted-media" allowfullscreen></iframe>
+<iframe width="750" height="420" src="https://www.youtube.com/embed/bNmIEJaXltg" frameborder="0" allow="autoplay; encrypted-media" allowfullscreen></iframe>
+
 
 # Nanocar Builder Plug-in
 The nanocar builder plug-in can be accessed from the top menu under `Build -> Nanocar` as seen below:
