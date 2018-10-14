@@ -9,5 +9,9 @@ navigation:
     url: installation
   - title: Usage
     url: usage
+  - title: Wheel molecules
+    url: wheels
+  - title: Chassis molecules
+    url: chassis
   - title: Avogadro Plug-in Tutorial
     url: plugin-tutorial
