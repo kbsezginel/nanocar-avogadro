@@ -63,7 +63,7 @@ def build_surface(opts):
     builder = getattr(ase.build, opts['surface'])
     size = [opts['size-x'], opts['size-y'], opts['size-z']]
     ase_surf = builder(opts['metal'], a=opts['a'], size=size, vacuum=opts['vacuum'], orthogonal=opts['orthogonal'])
-    ase_surf.center(about=(0, 0, 0))
+    ase_surf.center(about=(0, 0, -opts['vacuum']))
     return ase2xyz(ase_surf)
 
 
@@ -104,7 +104,7 @@ if __name__ == "__main__":
     if args['display_name']:
         print("Metal Surface")
     if args['menu_path']:
-        print("&Build")
+        print("&Build|Nanocar")
     if args['print_options']:
         print(json.dumps(get_options()))
     elif args['run_workflow']:
