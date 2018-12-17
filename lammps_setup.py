@@ -36,6 +36,10 @@ def get_options():
                               'type': 'integer',
                               'default': 40}
 
+    user_options['dir'] = {'label': 'Save directory',
+                           'type': 'string',
+                           'default': PLUGIN_DIR}
+
     return {'userOptions': user_options }
 
 
@@ -55,7 +59,11 @@ def setup_lammps(opts):
     nanocar = Molecule(atoms=atoms, coordinates=np.array(coords).reshape((int(len(coords) / 3)), 3))
     nanocar.set_cell([opts['box_x'], opts['box_y'], opts['box_z'], 90, 90, 90])
     nanocar.center([opts['box_x'] / 2, opts['box_y'] / 2, opts['box_z'] / 2])
-    write_data_file(nanocar, 'data.nanocar')
+    if not os.path.isdir(opts['dir']):
+        opts['dir'] = PLUGIN_DIR
+        print('Directory not found! Using plug-in directory -> %s' % PLUGIN_DIR)
+    data_file = os.path.join(opts['dir'], 'data.nanocar')
+    write_data_file(nanocar, data_file)
 
 
 def read_surface_size():
@@ -65,7 +73,7 @@ def read_surface_size():
         with open(filename, 'r') as f:
             surface_size = json.load(f)
     else:
-        surface_size = {'a': 0.0, 'b': 0.0}
+        surface_size = {'x': 0.0, 'y': 0.0}
     return surface_size
 
 
