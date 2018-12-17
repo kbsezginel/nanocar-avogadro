@@ -14,6 +14,7 @@ import ase.build
 # Some globals:
 debug = True
 surface_selections = ['bcc100', 'bcc110', 'bcc111', 'fcc100', 'fcc110', 'fcc111', 'fcc211']
+PLUGIN_DIR = os.path.abspath(os.path.dirname(__file__))
 
 
 def get_options():
@@ -71,7 +72,7 @@ def build_surface(opts):
 def write_surface_size(ase_surf):
     """Write surface size to a file to be read later to get the correct simulation box size."""
     surface_size = {'x': ase_surf.cell[0][0], 'y': ase_surf.cell[1][1]}
-    with open('surface_size.json', 'w') as outfile:
+    with open(os.path.join(PLUGIN_DIR, 'surface_size.json'), 'w') as outfile:
         json.dump(surface_size, outfile)
 
 

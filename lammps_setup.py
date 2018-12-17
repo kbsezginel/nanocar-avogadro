@@ -16,6 +16,7 @@ from lammps_writer import write_data_file
 
 
 FF_LIST = ['UFF', 'UFF4MOF', 'DREIDING']
+PLUGIN_DIR = os.path.abspath(os.path.dirname(__file__))
 
 
 def get_options():
@@ -57,8 +58,9 @@ def setup_lammps(opts):
     write_data_file(nanocar, 'data.nanocar')
 
 
-def read_surface_size(filename='surface_size.json'):
+def read_surface_size():
     """Read surface size for the last metal surface built."""
+    filename = os.path.join(PLUGIN_DIR, 'surface_size.json')
     if os.path.exists(filename):
         with open(filename, 'r') as f:
             surface_size = json.load(f)
