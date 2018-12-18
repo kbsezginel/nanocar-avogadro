@@ -17,7 +17,7 @@ AVOGADRO_PLUGIN_DIR = os.path.abspath(sys.argv[1])
 files = ['add_chassis.py', 'connect_wheel.py', 'surface_builder.py',
          'lammps_writer.py', 'lammps_setup.py', 'uff_nonbonded.csv']
 folders = ['wheel', 'chassis']
-cleanup = ['temp.xyz', 'surface_size.json', 'data.nanocar']
+cleanup = ['temp.xyz', 'surface_info.json', 'data.nanocar']
 nanocar_dir = os.path.abspath(os.path.dirname(__file__))
 workflows_dir = os.path.join(AVOGADRO_PLUGIN_DIR, 'workflows')
 if not os.path.exists(workflows_dir):
