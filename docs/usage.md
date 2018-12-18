@@ -8,10 +8,11 @@ The nanocar builder plug-in can be accessed from the top menu under `Build -> Na
 
 <p align="center"><img src='assets/img/nanocar-window.png'></p>
 
-The plug-in has three main features:
-1. [Add Chassis Molecule](#add-chassis)
-2. [Connect Wheel Molecule](#connect-wheel)
-3. [Add Metal Surface](#metal-surface)
+**The plug-in has four main features:**
+1. **[Add Chassis Molecule](#add-chassis)**
+2. **[Connect Wheel Molecule](#connect-wheel)**
+3. **[Add Metal Surface](#metal-surface)**
+4. **[Setup LAMMPS simulation](#lammps-setup)**
 
 ## Add Chassis
 <p align="center"><img src='assets/img/add-chassis-window.png' width="350"></p>
@@ -33,7 +34,7 @@ After you add the chassis you can connect wheel molecules by selecting an atom s
 - `Bond distance`: The distance of the wheel molecule to the selected atom site
 - `Wheel`: Wheel molecule name
 
-**Note:** Currently I advise to add wheel molecules to atom sites with only one bond. The plug-in uses this bonding information to align the wheel molecule to the selected atom site. If the selected atom site has more than one connection the wheel can aligned to any of those. An easy way to make sure the wheel is aligned correctly you can delete all the bonds except the one you want and redraw them after connecting the wheel.
+> **Note:** Always add wheel molecules to atom sites with only one bond. The plug-in uses this bonding information to align the wheel molecule to the selected atom site. If the selected atom site has more than one connection, the wheel can be aligned to any of them. An easy way to make sure the wheel is aligned correctly is to delete all the bonds except for the one you want and redraw them after connecting the wheel.
 
 ## Metal Surface
 <p align="center"><img src='assets/img/metal-surface-window.png' width="400"></p>
@@ -48,3 +49,18 @@ Nanocar builder plug-in also comes with a metal slab builder. You can place your
 - `Size Z`: Size of metal surface in *z* dimension
 - `Surface`: Surface type (bcc100, bcc110, bcc111, fcc100, fcc110, fcc111, fcc211)
 - `Vacuum distance`: Distance between the nanocar and the metal surface
+
+## LAMMPS Setup
+<p align="center"><img src='assets/img/lammps-setup-window.png' width="400"></p>
+
+Nanocar builder can also write necessary files to run a rigid body MD simulation in LAMMPS.
+These include a data file that contain structure information (atomic coordinates, box size, vdw parameters) and input file which contains simulation parameters. Some of these parameters can be selected from the *LAMMPS setup* window seen above.
+
+- `Simulation Box X`: Size of the periodic simulation box in *x* dimension
+- `Simulation Box Y`: Size of the periodic simulation box in *y* dimension
+- `Simulation Box Z`: Size of the periodic simulation box in *z* dimension
+- `Save directory`: Directory to save simulation files. If not found the files will be saved in the plug-in directory.
+- `Simulation length`: Length of the simulation in nanoseconds
+- `Timestep`: Timestep in femtoseconds
+
+> **Simulation details:** By default nanocar builder groups the surface and the nanocar as two separate rigid bodies. It fixes the surface atoms and allows the nanocar to move. It also calculates the center of mass for the nanocar every 10000 timesteps and prints it in the log file. Additionaly, full atomic coordinates for the nanocar is printed as a trajectory file. The vdW parameters for atoms are assigned from Universal Force Field (UFF). A Lennard-Jones potential with 12.5 Å cut-off is used. The default vdW parameters might not be strong enough to keep the nanocar at the surface therefore you might need to increase nanocar-surface interaction energy. By default MD simulation is performed at 300 K in NVT ensemble.
