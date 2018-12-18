@@ -12,7 +12,7 @@ import argparse
 from angstrom import Molecule
 import numpy as np
 import periodictable
-from lammps_writer import write_data_file
+from lammps_writer import write_data_file, write_input_file
 
 
 FF_LIST = ['UFF', 'UFF4MOF', 'DREIDING']
@@ -23,18 +23,26 @@ def get_options():
     """Create user interface options."""
     user_options = {}
 
-    box_size = read_surface_size()
+    surface_info = read_surface_info()
     user_options['box_x'] = {'label': 'Simulation Box X',
                               'type': 'float',
-                              'default': box_size['x']}
+                              'default': surface_info['x']}
 
     user_options['box_y'] = {'label': 'Simulation Box Y',
                               'type': 'float',
-                              'default': box_size['y']}
+                              'default': surface_info['y']}
 
     user_options['box_z'] = {'label': 'Simulation Box Z',
                               'type': 'integer',
                               'default': 40}
+
+    user_options['timestep'] = {'label': 'Timestep (fs)',
+                                'type': 'float',
+                                'default': 1.0}
+
+    user_options['sim_length'] = {'label': 'Simulation length (ns)',
+                                  'type': 'float',
+                                  'default': 1.0}
 
     user_options['dir'] = {'label': 'Save directory',
                            'type': 'string',
@@ -63,18 +71,32 @@ def setup_lammps(opts):
         opts['dir'] = PLUGIN_DIR
         print('Directory not found! Using plug-in directory -> %s' % PLUGIN_DIR)
     data_file = os.path.join(opts['dir'], 'data.nanocar')
-    write_data_file(nanocar, data_file)
+    write_data_file(data_file, nanocar)
+
+    # Write input file
+    surface_info = read_surface_info()
+    surface_ids = surface_info['id']
+    surface_atoms = surface_ids[1] - surface_ids[0]
+    num_atoms = len(nanocar.atoms)
+    if surface_ids[0] == 1:
+        mol_ids = [num_atoms - surface_atoms, num_atoms]
+    else:
+        mol_ids = [1, num_atoms - surface_atoms - 1]
+    input_file = os.path.join(opts['dir'], 'in.nanocar')
+    inp_parameters = {'sim_length': opts['sim_length'], 'ts': opts['timestep'],
+                      'mol_ids': mol_ids, 'surface_ids': surface_ids, 'T': 300}
+    write_input_file(input_file, nanocar, inp_parameters)
 
 
-def read_surface_size():
+def read_surface_info():
     """Read surface size for the last metal surface built."""
-    filename = os.path.join(PLUGIN_DIR, 'surface_size.json')
+    filename = os.path.join(PLUGIN_DIR, 'surface_info.json')
     if os.path.exists(filename):
         with open(filename, 'r') as f:
-            surface_size = json.load(f)
+            surface_info = json.load(f)
     else:
-        surface_size = {'x': 0.0, 'y': 0.0}
-    return surface_size
+        surface_info = {'x': 0.0, 'y': 0.0, 'id': [0, 0]}
+    return surface_info
 
 
 if __name__ == "__main__":
