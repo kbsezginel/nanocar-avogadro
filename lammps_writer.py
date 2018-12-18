@@ -12,7 +12,7 @@ import periodictable
 CSV_FILE = os.path.join(os.path.abspath(os.path.dirname(__file__)), 'uff_nonbonded.csv')
 
 
-def write_data_file(molecule, data_file):
+def write_data_file(data_file, molecule):
     """Write LAMMPS data file"""
     q = 0
     mol_id = 0
@@ -42,10 +42,35 @@ def write_data_file(molecule, data_file):
             f.write('%10i   %3i   %3i   %5.5f  %12.5f  %12.5f  %12.5f\n' % (idx, mol_id, atom_types[atom], q, coor[0], coor[1], coor[2]))
 
 
-def write_input_file(molecule, input_file):
+def write_input_file(input_file, molecule, parameters):
     """Write LAMMPS input file"""
+    write_every = 10000
+    num_timesteps = int(parameters['sim_length'] / parameters['ts'] * 1e6)
+    mol_ids, surface_ids = parameters['mol_ids'], parameters['surface_ids']
+    atom_names = sorted(list(set(molecule.atoms)))
     with open(input_file, 'w') as f:
-        f.write('')
+        f.write('log             log.nanocar append\n')
+        f.write('units           real\n')
+        f.write('atom_style      full\n')
+        f.write('boundary        p p p\n')
+        f.write('pair_style      lj/cut 12.500\n')
+        f.write('pair_modify     tail yes mix arithmetic\n')
+        f.write('read_data       data.nanocar\n\n')
+        f.write('group           mol      id   %i:%i\n' % (mol_ids[0], mol_ids[1]))
+        f.write('group           surf     id   %i:%i\n' % (surface_ids[0], surface_ids[1]))
+        f.write('compute         C1 mol com\n')
+        f.write('variable        seed equal 123456\n')
+        f.write('variable        T equal %i\n'% parameters['T'])
+        f.write('thermo          %i\n' % write_every)
+        f.write('thermo_style    custom step temp press etotal epair emol c_C1[1] c_C1[2] c_C1[3]\n')
+        f.write('velocity        mol create $T ${seed} dist uniform\n')
+        f.write('timestep        %.1f\n' % parameters['ts'])
+        f.write('variable        txyz equal %i\n' % write_every)
+        f.write('dump            1 mol custom ${txyz} traj.xyz id element xu yu zu\n')
+        f.write('dump_modify     1 element %s\n\n' % ' '.join(atom_names))
+        f.write('fix             RIG mol rigid/nvt single temp $T $T 100\n')
+        f.write('run             %i\n' % num_timesteps)
+        f.write('unfix           RIG\n')
 
 
 def read_uff_parameters(csv_file, atoms, skip_headers=True):
