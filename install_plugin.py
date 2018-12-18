@@ -14,8 +14,10 @@ import shutil
 
 
 AVOGADRO_PLUGIN_DIR = os.path.abspath(sys.argv[1])
-scripts = ['add_chassis.py', 'connect_wheel.py', 'surface_builder.py']
+files = ['add_chassis.py', 'connect_wheel.py', 'surface_builder.py',
+         'lammps_writer.py', 'lammps_setup.py', 'uff_nonbonded.csv']
 folders = ['wheel', 'chassis']
+cleanup = ['temp.xyz', 'surface_size.json', 'data.nanocar']
 nanocar_dir = os.path.abspath(os.path.dirname(__file__))
 workflows_dir = os.path.join(AVOGADRO_PLUGIN_DIR, 'workflows')
 if not os.path.exists(workflows_dir):
@@ -33,9 +35,9 @@ def copy_files(file_list, src_dir, dest_dir):
         shutil.copy(os.path.join(src_dir, f), dest_dir)
 
 
-# Copy scripts
+# Copy scripts and other files
 print('\n%s Installing scipts %s' % ('-' * 20, '-' * 20))
-copy_files(scripts, nanocar_dir, workflows_dir)
+copy_files(files, nanocar_dir, workflows_dir)
 
 # Copy folders (molecules)
 print('\n%s Installing molecules %s' % ('-' * 19, '-' * 19))
@@ -48,4 +50,11 @@ for f in folders:
     os.makedirs(fdir, exist_ok=True)
     copy_files(os.listdir(os.path.join(nanocar_dir, f)), os.path.join(nanocar_dir, f), fdir)
 
-print('%s\nDone!' % ('-' * 60))
+# Cleanup files
+print('\n%s Cleanup %s' % ('-' * 25, '-' * 26))
+for f in cleanup:
+    if os.path.exists(os.path.join(workflows_dir, f)):
+        os.remove(os.path.join(workflows_dir, f))
+        print('Removing temp file -> %s' % f)
+
+print('\n%s\nDone!' % ('-' * 60))
