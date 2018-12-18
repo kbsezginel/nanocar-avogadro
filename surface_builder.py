@@ -65,15 +65,21 @@ def build_surface(opts):
     size = [opts['size-x'], opts['size-y'], opts['size-z']]
     ase_surf = builder(opts['metal'], a=opts['a'], size=size, vacuum=opts['vacuum'], orthogonal=opts['orthogonal'])
     ase_surf.center(about=(0, 0, -opts['vacuum']))
-    write_surface_size(ase_surf)
+    # Get surface atom id to keep track of surface atoms
+    try:
+        surf_atom_id = int(len(opts['cjson']['atoms']['coords']['3d']) / 3 + 1)
+    except KeyError:
+        surf_atom_id = 1
+    surface_info = {'x': ase_surf.cell[0][0], 'y': ase_surf.cell[1][1],
+                    'id': [surf_atom_id, ase_surf.get_number_of_atoms() + surf_atom_id - 1]}
+    write_surface_info(surface_info)
     return ase2xyz(ase_surf)
 
 
-def write_surface_size(ase_surf):
+def write_surface_info(surface_info):
     """Write surface size to a file to be read later to get the correct simulation box size."""
-    surface_size = {'x': ase_surf.cell[0][0], 'y': ase_surf.cell[1][1]}
-    with open(os.path.join(PLUGIN_DIR, 'surface_size.json'), 'w') as outfile:
-        json.dump(surface_size, outfile)
+    with open(os.path.join(PLUGIN_DIR, 'surface_info.json'), 'w') as outfile:
+        json.dump(surface_info, outfile)
 
 
 def ase2xyz(atoms):
