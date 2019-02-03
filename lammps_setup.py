@@ -24,17 +24,17 @@ def get_options():
     user_options = {}
 
     surface_info = read_surface_info()
-    user_options['box_x'] = {'label': 'Simulation Box X',
+    user_options['box_x'] = {'label': 'Simulation Box X (nm)',
                               'type': 'float',
-                              'default': surface_info['x']}
+                              'default': surface_info['x'] / 10}
 
-    user_options['box_y'] = {'label': 'Simulation Box Y',
+    user_options['box_y'] = {'label': 'Simulation Box Y (nm)',
                               'type': 'float',
-                              'default': surface_info['y']}
+                              'default': surface_info['y'] / 10}
 
-    user_options['box_z'] = {'label': 'Simulation Box Z',
-                              'type': 'integer',
-                              'default': 40}
+    user_options['box_z'] = {'label': 'Simulation Box Z (nm)',
+                              'type': 'float',
+                              'default': 3.0}
 
     user_options['timestep'] = {'label': 'Timestep (fs)',
                                 'type': 'float',
@@ -65,6 +65,7 @@ def setup_lammps(opts):
     coords = np.array(opts['cjson']['atoms']['coords']['3d'])
     atoms = [periodictable.elements[i].symbol for i in opts['cjson']['atoms']['elements']['number']]
     nanocar = Molecule(atoms=atoms, coordinates=np.array(coords).reshape((int(len(coords) / 3)), 3))
+    opts['box_x'], opts['box_y'], opts['box_z'] = opts['box_x'] * 10, opts['box_y'] * 10, opts['box_z'] * 10
     nanocar.set_cell([opts['box_x'], opts['box_y'], opts['box_z'], 90, 90, 90])
     nanocar.center([opts['box_x'] / 2, opts['box_y'] / 2, opts['box_z'] / 2])
     if not os.path.isdir(opts['dir']):
