@@ -13,5 +13,3 @@ navigation:
     url: wheels
   - title: Chassis molecules
     url: chassis
-  - title: Avogadro Plug-in Tutorial
-    url: plugin-tutorial
