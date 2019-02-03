@@ -74,6 +74,7 @@ def write_input_file(input_file, molecule, parameters):
 
 
 def read_uff_parameters(csv_file, atoms, skip_headers=True):
+    rm_to_sigma = 1 / (2 ** (1/6))
     with open(csv_file, 'r') as f:
         csv_reader = csv.reader(f, delimiter=',')
         if skip_headers:
@@ -81,5 +82,6 @@ def read_uff_parameters(csv_file, atoms, skip_headers=True):
         parameters = {}
         for row in csv_reader:
             if row[0] in atoms:
-                parameters[row[0]] = {'eps': float(row[2]), 'sig': float(row[1])}
+                parameters[row[0]] = {'eps': float(row[2]),
+                                      'sig': float(row[1]) * rm_to_sigma}
     return parameters
