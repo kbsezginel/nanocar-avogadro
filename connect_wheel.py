@@ -19,6 +19,7 @@ debug = True
 
 wheel_dir = os.path.join(os.path.abspath(os.path.dirname(__file__)), 'wheel')
 wheel_list = [i.split('.')[0] for i in os.listdir(wheel_dir)]
+PLUGIN_DIR = os.path.abspath(os.path.dirname(__file__))
 
 
 def get_options():
@@ -38,6 +39,10 @@ def get_options():
                          'precision': 2,
                          'default': 1.5,
                          'suffix': 'Å'}
+
+    user_options['refresh_wheel_list'] = {'label': 'Refresh Wheel List',
+                                          'type': 'boolean',
+                                          'default': False}
 
     return {'userOptions': user_options }
 
@@ -91,6 +96,11 @@ def connect_wheel(opts):
         # Remove dummy atoms for alignment and connection sites
         wheel.coordinates = np.delete(wheel.coordinates, [wheel.connection_site, wheel.alignment_site], axis=0)
         wheel.atoms = np.delete(wheel.atoms, [wheel.connection_site, wheel.alignment_site])
+
+        # Write wheel atom ids to file for grouping
+        wheel_info = {'name': opts['wheel'], 'start': len(chassi.atoms), 'n_atoms': len(wheel.atoms)}
+        write_wheel_list(wheel_info, refresh=opts['refresh_wheel_list'])
+
         if not opts['append']:
             wheel += chassi
 
@@ -117,6 +127,19 @@ def read_wheel(wheel_name):
     wheel.alignment_site, = np.where(wheel.atoms == 'Xa')[0]
     return wheel
 
+
+def write_wheel_list(wheel_info, refresh=False):
+    """Write atom ids for the connected wheel to keep track of atom groupings"""
+    wheel_list_file = os.path.join(PLUGIN_DIR, 'wheel_list.json')
+    if os.path.exists(wheel_list_file) and not refresh:
+        # Read and append new wheel if we don't want to refresh
+        with open(wheel_list_file, 'r') as outfile:
+            wheels = json.load(outfile)
+        wheel_list = wheels + [wheel_info]
+    else:
+        wheel_list = [wheel_info]
+    with open(wheel_list_file, 'w') as outfile:
+        json.dump(wheel_list, outfile)
 
 def run_workflow():
     """Run main function - add wheel."""
