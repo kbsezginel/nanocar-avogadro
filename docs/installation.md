@@ -17,12 +17,10 @@ which python
 and copy the path which should look like `/usr/local/miniconda3/envs/nanocar/bin/python`.
 
 Open Avogadro and go to `Quantum -> Input Generators -> Set Python Path`.
-Paste this path here. Now Avogadro knows which Python to use for our plug-ins!
+Paste this path here. Now Avogadro knows which Python to use for our plug-in!
 
 ### 4. Install the Nanocar builder plug-in
-Lastly, we need to install our plug-in.
-
-For Mac, the plug-ins directory will be present at
+Lastly, we need to install our plug-in. For Mac, the plug-ins directory will be present at
 `Applications -> Avogadro2.app -> Contents -> lib -> avogadro2 -> scripts`.
 Copy the path for this directory which should look like
 `/Applications/Avogadro2.app/Contents/lib/avogadro2/scripts`.
@@ -43,7 +41,7 @@ cd /Applications/Avogadro2.app/Contents/MacOS
 ./Avogadro2
 ```
 
-Last tested: March 28, 2019 on MacOS Mojave 10.14.2 (18C54).
+*Last tested: March 28, 2019 on MacOS Mojave 10.14.2 (18C54)*
 
 --------------------
 
@@ -70,12 +68,11 @@ and copy the path which should look something like
 `/home/<username>/miniconda3/envs/nanocar/bin/python`.
 
 Open Avogadro and go to `Quantum -> Input Generators -> Set Python Path`.
-Paste this path here. Now Avogadro knows which Python to use for our plug-ins!
+Paste this path here. Now Avogadro knows which Python to use for our plug-in!
 
 ### 4. Install the Nanocar builder plug-in
-Lastly, we need to install our plug-in.
-
-For linux this should be under `/home/<username>/.local/share/OpenChemistry/Avogadro` where
+Lastly, we need to install our plug-in. For linux the plug-ins directory should
+be under `/home/<username>/.local/share/OpenChemistry/Avogadro` where
 `<username>` is your username. Copy that path and run the Python installer:
 ```
 python install_plugin.py /home/<username>/.local/share/OpenChemistry/Avogadro
@@ -87,7 +84,7 @@ If you are planning to use other plug-ins make sure to install their dependencie
 to the same Python environment. Currently, Avogadro uses the same Python environment
 for all the plug-ins.
 
-Last tested: Oct 8, 2018 on Ubuntu 16.08
+*Last tested: Oct 8, 2018 on Ubuntu 16.08*
 
 ----------------------
 
