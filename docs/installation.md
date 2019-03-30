@@ -2,6 +2,7 @@
 
 - **[Mac OS X](#mac-os-x)**
 - **[Linux](#linux)**
+- **[Installation notes](#notes)**
 
 --------------------
 
@@ -29,17 +30,6 @@ Enter the `nanocar-avogadro` repository and run the installer Python script:
 python install_plugin.py /Applications/Avogadro2.app/Contents/lib/avogadro2/scripts
 ```
 Congratulations! Now you should see the `Nanocar` option under `Build` in Avogadro.
-
-### Notes
-If you are planning to use other plug-ins make sure to install their dependencies
-to the same Python environment. Currently, Avogadro uses the same Python environment
-for all the plug-ins.
-
-For debugging purposes you can run Avogadro from the command line:
-```
-cd /Applications/Avogadro2.app/Contents/MacOS
-./Avogadro2
-```
 
 *Last tested: March 28, 2019 on MacOS Mojave 10.14.2 (18C54)*
 
@@ -79,11 +69,6 @@ python install_plugin.py /home/<username>/.local/share/OpenChemistry/Avogadro
 ```
 Congratulations! Now you should see the `Nanocar` option under `Build` in Avogadro.
 
-### Notes
-If you are planning to use other plug-ins make sure to install their dependencies
-to the same Python environment. Currently, Avogadro uses the same Python environment
-for all the plug-ins.
-
 *Last tested: Oct 8, 2018 on Ubuntu 16.08*
 
 ----------------------
@@ -113,4 +98,25 @@ cd nanocar-avogadro
 4. Install requirements:
 ```
 pip install -r requirements.txt
+```
+
+## Notes
+If you are planning to use other plug-ins make sure to install their dependencies
+to the same Python environment. Currently, Avogadro uses the same Python environment
+for all the plug-ins.
+
+For debugging purposes you can run Avogadro from the command line:
+- Mac OS
+```
+cd /Applications/Avogadro2.app/Contents/MacOS
+./Avogadro2
+```
+
+Depending on your Avogadro version the plug-in directory might be different.
+When you run Avogadro from the command line, it will print the directories
+it's checking for scripts. If you see `Checking for  "commands"  scripts` instead
+of `Checking for  "workflows"  scripts` then you need to run the installation
+script as:
+```
+python install_plugin.py /path/to/avogadro/plugin/directory --subfolder commands
 ```
