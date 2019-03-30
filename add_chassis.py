@@ -24,28 +24,28 @@ def get_options():
     user_options = {}
     user_options['chassis'] = {'label': 'Chassis',
                                'type': 'stringList',
-                               'default': 'benzene',
+                               'default': 'chassis-H2-cd',
                                'values': chassis_list}
 
     user_options['center-x'] = {'label': 'X',
-                              'type': 'float',
-                              'default': 0.0,
-                              'precision': 3,
-                              'suffix': 'Å'}
+                                'type': 'float',
+                                'default': 0.0,
+                                'precision': 3,
+                                'suffix': 'Å'}
 
     user_options['center-y'] = {'label': 'Y',
-                              'type': 'float',
-                              'default': 0.0,
-                              'precision': 3,
-                              'suffix': 'Å'}
+                                'type': 'float',
+                                'default': 0.0,
+                                'precision': 3,
+                                'suffix': 'Å'}
 
     user_options['center-z'] = {'label': 'Z',
-                              'type': 'float',
-                              'default': 0.0,
-                              'precision': 3,
-                              'suffix': 'Å'}
+                                'type': 'float',
+                                'default': 0.0,
+                                'precision': 3,
+                                'suffix': 'Å'}
 
-    return {'userOptions': user_options }
+    return {'userOptions': user_options}
 
 
 def build_nanocar(opts):
