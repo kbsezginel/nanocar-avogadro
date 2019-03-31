@@ -8,8 +8,7 @@ Build a Nanocar molecule by picking molecular wheels and chassis in [Avogadro 2]
 ## [Installation](https://kbsezginel.github.io/nanocar-avogadro/installation)
 
 - **[Mac OS X](https://kbsezginel.github.io/nanocar-avogadro/installation#mac-os-x)**
-- **[Linux](https://kbsezginel.github.io/nanocar-avogadro/installation#linux-ubuntu)**
-- **[Windows](https://kbsezginel.github.io/nanocar-avogadro/installation#windows)**
+- **[Linux](https://kbsezginel.github.io/nanocar-avogadro/installation#linux)**
 
 ## [Usage](https://kbsezginel.github.io/nanocar-avogadro/usage)
 
