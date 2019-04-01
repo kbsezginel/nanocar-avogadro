@@ -40,10 +40,6 @@ def get_options():
                          'default': 1.5,
                          'suffix': 'Å'}
 
-    user_options['refresh_wheel_list'] = {'label': 'Refresh Wheel List',
-                                          'type': 'boolean',
-                                          'default': False}
-
     return {'userOptions': user_options }
 
 
@@ -98,8 +94,8 @@ def connect_wheel(opts):
         wheel.atoms = np.delete(wheel.atoms, [wheel.connection_site, wheel.alignment_site])
 
         # Write wheel atom ids to file for grouping
-        wheel_info = {'name': opts['wheel'], 'start': len(chassi.atoms), 'n_atoms': len(wheel.atoms)}
-        write_wheel_list(wheel_info, refresh=opts['refresh_wheel_list'])
+        # wheel_info = {'name': opts['wheel'], 'start': len(chassi.atoms), 'n_atoms': len(wheel.atoms)}
+        # write_wheel_list(wheel_info, refresh=opts['refresh_wheel_list'])
 
         if not opts['append']:
             wheel += chassi
