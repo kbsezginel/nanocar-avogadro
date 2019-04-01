@@ -30,7 +30,7 @@ def install_plugin(args):
     files = ['add_chassis.py', 'connect_wheel.py', 'surface_builder.py',
              'lammps_writer.py', 'lammps_setup.py', 'uff_nonbonded.csv']
     folders = ['wheel', 'chassis']
-    cleanup = ['temp.xyz', 'surface_info.json', 'data.nanocar']
+    cleanup = ['temp.xyz', 'surface_info.json', 'data.nanocar', 'in.nanocar', 'wheel_list.json']
 
     plugin_dir = os.path.join(os.path.abspath(args['scripts_dir']),
                               args['subfolder'])
@@ -57,11 +57,12 @@ def install_plugin(args):
                    os.path.join(nanocar_dir, f), fdir)
 
     # Cleanup files
-    print('\n%s Cleanup %s' % ('-' * 25, '-' * 26))
-    for f in cleanup:
-        if os.path.exists(os.path.join(plugin_dir, f)):
-            os.remove(os.path.join(plugin_dir, f))
-            print('Removing temp file -> %s' % f)
+    if not args['no_cleanup']:
+        print('\n%s Cleanup %s' % ('-' * 25, '-' * 26))
+        for f in cleanup:
+            if os.path.exists(os.path.join(plugin_dir, f)):
+                os.remove(os.path.join(plugin_dir, f))
+                print('Removing temp file -> %s' % f)
 
     print('\n%s\nDone!' % ('-' * 60))
 
@@ -69,9 +70,10 @@ def install_plugin(args):
 if __name__ == '__main__':
     parser = argparse.ArgumentParser(description=dedent("""
     Install/update Nanocar Avogadro Plug-in.
-    =================================================
-                   o---o NANOCAR o---o
-    =================================================
+    ===================================================
+        o---o    o---o    NANOCAR    o---o    o---o
+    ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~
+    ===================================================
     """), epilog=dedent("""
     Example:
     > python install_plugin.py /path/to/avogadro/plugin/directory
@@ -82,9 +84,10 @@ if __name__ == '__main__':
 
     parser.add_argument('scripts_dir', type=str,
                         help='Avogadro2 plug-in directory.')
-
     parser.add_argument('--subfolder', '-s', type=str, default='workflows',
                         help='Plugin subfolder name (default: workflows).')
+    parser.add_argument('--no-cleanup', '-nc', action='store_true', default=False,
+                        help="Don't cleanup temporary files  (default: False)")
     args = vars(parser.parse_args())
 
     install_plugin(args)
