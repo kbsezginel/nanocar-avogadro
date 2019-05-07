@@ -29,7 +29,7 @@ def write_data_file(molecule):
         LAMMPS formatted data file containing structure information.
     """
     q, mol_id = 0, 0
-    data = dedent(f"""Created by Avogadro Nanocar Builder
+    data = dedent(f"""    Created by Avogadro Nanocar Builder
 
     {len(molecule.atoms):10} atoms
     {0:10} bonds
@@ -37,11 +37,12 @@ def write_data_file(molecule):
     {0:10} dihedrals
     {0:10} impropers
     {len(molecule.unique_atoms):10} atom types
+    {0:10} bond types
     {0.0:16.5f}   {molecule.cell.a:5.5f}   xlo xhi
     {0.0:16.5f}   {molecule.cell.b:5.5f}   ylo yhi
     {0.0:16.5f}   {molecule.cell.c:5.5f}   zlo zhi
 
-    Masses\n\n
+    Masses\n
     """)
     for idx, atom in enumerate(molecule.unique_atoms, start=1):
         data += f'{idx:5}   {periodictable.elements.symbol(atom).mass:10.5f} # {atom}\n'
@@ -72,12 +73,16 @@ def write_input_file(molecule, parameters):
     write_every = 10000
     num_timesteps = int(parameters['sim_length'] / parameters['ts'] * 1e6)
 
+    extra_bonds = ''
+    if parameters['multibody']:
+        extra_bonds = 'extra/bond/types 1 extra/bond/per/atom 1'
+
     # Start simulation input
     inp = dedent(f"""
     units           real
     atom_style      full
     boundary        p p p
-    read_data       {DATA_FILE}
+    read_data       {DATA_FILE} {extra_bonds}
     """)
 
     # Group atoms
@@ -95,13 +100,12 @@ def write_input_file(molecule, parameters):
             ff_par[f'{molecule.atom_types[molecule.surface_atom]}-{typ}'] = [eps, sig]
     inp += write_pair_style(ff_par)
 
-    # TODO: If multibody add bonds between wheels
-    # Figure out how to make sure we only add bonds between wheels and chassis
     if parameters['multibody']:
         bond_id = 1
-        inp += f'\nbond_style      harmonic\nbond_coeff      1 200.0 1.4\n'
+        inp += f'\nbond_style      harmonic\n'
         for bond in parameters['bonds']:
             inp += f'create_bonds    single/bond  {bond_id} {bond[0]} {bond[1]}\n'
+        inp += 'bond_coeff      1 693.14 1.21 # C_1 C_1\n'  # UFF C_1 bond parameters
 
     inp += dedent(f"""
     compute         C1 nanocar com
