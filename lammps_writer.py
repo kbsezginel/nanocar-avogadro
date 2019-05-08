@@ -116,15 +116,16 @@ def write_input_file(molecule, parameters):
     timestep        {parameters['ts']}
     dump            1 nanocar custom {write_every} traj.xyz id element xu yu zu
     dump_modify     1 element {' '.join(molecule.unique_atoms)}
-    fix             RIG nanocar rigid/nvt single temp $T $T 100
-    run             {num_timesteps}
-    unfix           RIG
     """)
 
-    # TODO : Rigid fix for multiple bodies
-
-    # TODO: Figure out velocity assignment for rigid bodies
-    # velocity        group-ID zero linear rigid RIG
+    # Apply rigid fix to everything but the surface and ssign zero velocity
+    parameters['groups'].pop('surface')
+    for fix_idx, group in enumerate(parameters['groups'], start=1):
+        inp += f'fix             RIG{fix_idx} {group} rigid/nvt single temp $T $T 100\n'
+        inp += f'velocity        {group} zero linear rigid RIG{fix_idx}\n'
+    inp += f'run             {num_timesteps}\n'
+    for fix_idx, group in enumerate(parameters['groups'], start=1):
+        inp += f'unfix           RIG{fix_idx}\n'
     return inp
 
 
