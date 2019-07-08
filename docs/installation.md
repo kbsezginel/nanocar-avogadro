@@ -39,7 +39,7 @@ Congratulations! Now you should see the `Nanocar` option under `Build` in Avogad
 ### 1. Install Avogadro 2
 First build Avogadro 2 from the [openchemistry supermodule](https://github.com/OpenChemistry/openchemistry).
 ```
-git clone https://github.com/OpenChemistry/openchemistry.git
+git clone --recursive https://github.com/OpenChemistry/openchemistry.git
 mkdir openchemistry-build
 cd openchemistry-build
 cmake ../openchemistry
