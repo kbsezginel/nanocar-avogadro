@@ -40,6 +40,10 @@ def get_options():
                          'default': 1.5,
                          'suffix': 'Å'}
 
+    user_options['refresh_wheel_list'] = {'label': 'Refresh Wheel List',
+                                          'type': 'boolean',
+                                          'default': False}
+
     return {'userOptions': user_options }
 
 
@@ -94,8 +98,9 @@ def connect_wheel(opts):
         wheel.atoms = np.delete(wheel.atoms, [wheel.connection_site, wheel.alignment_site])
 
         # Write wheel atom ids to file for grouping
-        # wheel_info = {'name': opts['wheel'], 'start': len(chassi.atoms), 'n_atoms': len(wheel.atoms)}
-        # write_wheel_list(wheel_info, refresh=opts['refresh_wheel_list'])
+        wheel_info = {'name': opts['wheel'], 'start': len(chassi.atoms) + 1, 'n_atoms': len(wheel.atoms),
+                      'bond': (int(selected_cidx / 3) + 1, len(chassi.atoms) + wheel.bond_site + 1)}
+        write_wheel_list(wheel_info, refresh=opts['refresh_wheel_list'])
 
         if not opts['append']:
             wheel += chassi
@@ -121,6 +126,11 @@ def read_wheel(wheel_name):
     wheel = Molecule(read=os.path.join(wheel_dir, '%s.xyz' % wheel_name))
     wheel.connection_site, = np.where(wheel.atoms == 'Xc')[0]
     wheel.alignment_site, = np.where(wheel.atoms == 'Xa')[0]
+    # Find wheel bond site
+    for idx, coor in enumerate(wheel.coordinates):
+        if idx != wheel.connection_site and idx != wheel.alignment_site:
+            if np.linalg.norm(wheel.coordinates[wheel.alignment_site] - coor) < 0.1:
+                wheel.bond_site = idx
     return wheel
 
 

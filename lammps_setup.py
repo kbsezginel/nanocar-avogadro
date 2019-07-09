@@ -12,7 +12,7 @@ import argparse
 from angstrom import Molecule
 import numpy as np
 import periodictable
-from lammps_writer import write_data_file, write_input_file
+from lammps_writer import write_data_file, write_input_file, DATA_FILE, IN_FILE
 
 
 FF_LIST = ['UFF', 'UFF4MOF', 'DREIDING']
@@ -48,6 +48,10 @@ def get_options():
                            'type': 'string',
                            'default': PLUGIN_DIR}
 
+    user_options['multibody'] = {'label': 'Multibody',
+                                 'type': 'boolean',
+                                 'default': True}
+
     return {'userOptions': user_options }
 
 
@@ -55,7 +59,6 @@ def run_workflow():
     """Run main function - LAMMPS setup."""
     stdinStr = sys.stdin.read()
     opts = json.loads(stdinStr)
-
     setup_lammps(opts)
 
 
@@ -71,22 +74,52 @@ def setup_lammps(opts):
     if not os.path.isdir(opts['dir']):
         opts['dir'] = PLUGIN_DIR
         print('Directory not found! Using plug-in directory -> %s' % PLUGIN_DIR)
-    data_file = os.path.join(opts['dir'], 'data.nanocar')
-    write_data_file(data_file, nanocar)
 
-    # Write input file
+    # Read surface info
     surface_info = read_surface_info()
     surface_ids = surface_info['id']
-    surface_atoms = surface_ids[1] - surface_ids[0]
-    num_atoms = len(nanocar.atoms)
-    if surface_ids[0] == 1:
-        mol_ids = [num_atoms - surface_atoms, num_atoms]
+
+    # Determine unique atom types and labels
+    nanocar.unique_atoms = sorted(list(set(nanocar.atoms)))
+    nanocar.atom_types = {atom: idx for idx, atom in enumerate(nanocar.unique_atoms, start=1)}
+    nanocar.surface_atom = nanocar.atoms[surface_info['id'][0]]
+
+    # Write data file
+    with open(os.path.join(opts['dir'], DATA_FILE), 'w') as f:
+        f.write(write_data_file(nanocar))
+
+    # Determine atom grouping | wheel bonding info!
+    mol_bonds = []
+    mol_groups = {'surface': surface_info['id']}
+    if opts['multibody']:
+        # Read wheel info
+        wheel_list_file = os.path.join(PLUGIN_DIR, 'wheel_list.json')
+        if os.path.exists(wheel_list_file):
+            with open(wheel_list_file, 'r') as outfile:
+                wheels = json.load(outfile)
+        # Determine atom groups
+        for widx, w in enumerate(wheels, start=1):
+            mol_groups['%s_%i' % (w['name'], widx)] = [w['start'], w['start'] + w['n_atoms'] - 1]
+            mol_bonds.append(w['bond'])
+        mol_groups['chassis'] = [1, min([i[0] for i in mol_groups.values()]) - 1]
+        mol_groups['nanocar'] = [1, max([i[1] for g, i in mol_groups.items() if g != 'surface'])]
     else:
-        mol_ids = [1, num_atoms - surface_atoms - 1]
-    input_file = os.path.join(opts['dir'], 'in.nanocar')
+        surface_atoms = surface_ids[1] - surface_ids[0]
+        num_atoms = len(nanocar.atoms)
+        if surface_ids[0] == 1:
+            mol_ids = [num_atoms - surface_atoms, num_atoms]
+        else:
+            mol_ids = [1, num_atoms - surface_atoms - 1]
+        mol_groups['nanocar'] = mol_ids
+
     inp_parameters = {'sim_length': opts['sim_length'], 'ts': opts['timestep'],
-                      'mol_ids': mol_ids, 'surface_ids': surface_ids, 'T': 300}
-    write_input_file(input_file, nanocar, inp_parameters)
+                      'groups': mol_groups, 'T': 300, 'multibody': opts['multibody'],
+                      'bonds': mol_bonds}
+
+    with open(os.path.join(opts['dir'], IN_FILE), 'w') as f:
+        f.write(write_input_file(nanocar, inp_parameters))
+
+    nanocar.write(os.path.join(opts['dir'], 'nanocar.xyz'))
 
 
 def read_surface_info():
