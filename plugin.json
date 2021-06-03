@@ -1,0 +1,13 @@
+{
+  "author": "Kutay B. Sezginel",
+  "version": 1.0,
+  "url": "https://github.com/kbsezginel/nanocar-avogadro",
+  "name": "nanocar-avogadro",
+  "description": "Nanocar Builder",
+  "type": "commands",
+  "commands": [
+    { "name": "Chassis", "command": "add_chassis.py" },
+    { "name": "Wheel", "command": "connect_wheel.py" },
+    { "name": "LAMMPS", "command": "lammps_setup.py" }
+  ]
+}

@@ -137,7 +137,7 @@ def write_wheel_list(wheel_info, refresh=False):
     with open(wheel_list_file, 'w') as outfile:
         json.dump(wheel_list, outfile)
 
-def run_workflow():
+def run_command():
     """Run main function - add wheel."""
     stdinStr = sys.stdin.read()
     opts = json.loads(stdinStr)
@@ -153,7 +153,7 @@ if __name__ == "__main__":
     parser = argparse.ArgumentParser('Build Nanocar!')
     parser.add_argument('--debug', action='store_true')
     parser.add_argument('--print-options', action='store_true')
-    parser.add_argument('--run-workflow', action='store_true')
+    parser.add_argument('--run-command', action='store_true')
     parser.add_argument('--display-name', action='store_true')
     parser.add_argument('--menu-path', action='store_true')
     parser.add_argument('--lang', nargs='?', default='en')
@@ -167,5 +167,5 @@ if __name__ == "__main__":
         print("&Build|Nanocar")
     if args['print_options']:
         print(json.dumps(get_options()))
-    elif args['run_workflow']:
-        print(json.dumps(run_workflow()))
+    elif args['run_command']:
+        print(json.dumps(run_command()))
