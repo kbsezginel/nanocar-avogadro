@@ -7,6 +7,7 @@ Date: November 2018
 """
 import os
 import sys
+from pathlib import Path
 import json
 import argparse
 from angstrom import Molecule
@@ -45,13 +46,13 @@ def get_options():
                                   'default': 1.0}
 
     user_options['dir'] = {'label': 'Save directory',
-                           'type': 'string',
+                           'type': 'filePath',
                            'default': PLUGIN_DIR}
 
     return {'userOptions': user_options }
 
 
-def run_workflow():
+def run_command():
     """Run main function - LAMMPS setup."""
     stdinStr = sys.stdin.read()
     opts = json.loads(stdinStr)
@@ -69,8 +70,13 @@ def setup_lammps(opts):
     nanocar.set_cell([opts['box_x'], opts['box_y'], opts['box_z'], 90, 90, 90])
     nanocar.center([opts['box_x'] / 2, opts['box_y'] / 2, opts['box_z'] / 2])
     if not os.path.isdir(opts['dir']):
-        opts['dir'] = PLUGIN_DIR
-        print('Directory not found! Using plug-in directory -> %s' % PLUGIN_DIR)
+        # try removing the last part of the path (a file)
+        parent = (Path(opts['dir']).parent.absolute())
+        if not os.path.isdir(parent):
+            opts['dir'] = PLUGIN_DIR
+            print('Directory not found! Using plug-in directory -> %s' % PLUGIN_DIR)
+        else:
+            opts['dir'] = parent
     data_file = os.path.join(opts['dir'], 'data.nanocar')
     write_data_file(data_file, nanocar)
 
@@ -104,7 +110,7 @@ if __name__ == "__main__":
     parser = argparse.ArgumentParser('LAMMPS!')
     parser.add_argument('--debug', action='store_true')
     parser.add_argument('--print-options', action='store_true')
-    parser.add_argument('--run-workflow', action='store_true')
+    parser.add_argument('--run-command', action='store_true')
     parser.add_argument('--display-name', action='store_true')
     parser.add_argument('--menu-path', action='store_true')
     parser.add_argument('--lang', nargs='?', default='en')
@@ -118,5 +124,5 @@ if __name__ == "__main__":
         print("&Build|Nanocar")
     if args['print_options']:
         print(json.dumps(get_options()))
-    elif args['run_workflow']:
-        print(json.dumps(run_workflow()))
+    elif args['run_command']:
+        print(json.dumps(run_command()))
